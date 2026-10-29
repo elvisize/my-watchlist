@@ -121,7 +121,7 @@ input,textarea{width:100%;border:1px solid #ddd;border-radius:11px;padding:12px;
   $("clearKey").addEventListener("click",()=>{localStorage.removeItem(KEY);$("apiKey").value="";$("keyStatus").textContent="Saved key cleared.";});
   function openModal() {
     $("searchModal").classList.remove("hidden"); $("query").value=""; $("note").value="";
-    $("results").innerHTML=""; $("searchStatus").textContent=""; $("editFields").classList.add("hidden");
+    $("results").innerHTML=""; $("results").classList.remove("hidden"); $("searchStatus").textContent=""; $("editFields").classList.add("hidden");
     chosen=null; lastResults=[]; $("query").focus();
   }
   function closeModal() {$("searchModal").classList.add("hidden");}
@@ -132,7 +132,7 @@ input,textarea{width:100%;border:1px solid #ddd;border-radius:11px;padding:12px;
   $("doSearch").addEventListener("click",search);
   async function search() {
     const key=localStorage.getItem(KEY), q=$("query").value.trim();
-    $("results").innerHTML=""; $("editFields").classList.add("hidden");
+    $("results").innerHTML=""; $("results").classList.remove("hidden"); $("editFields").classList.add("hidden");
     if(!key){$("searchStatus").textContent="Add your TMDb API key in Search and poster settings first.";return;}
     if(!q){$("searchStatus").textContent="Enter a title to search.";return;}
     $("searchStatus").textContent="Searching…"; $("doSearch").disabled=true;
