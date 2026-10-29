@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f4f4">
+<title>My Watchlist</title>
+<style>
+:root{color-scheme:light;--ink:#222;--muted:#737373;--line:#e7e7e7;--selected:#d1d1d1;--unselected:#fafafa;--panel:#f5f5f5}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:760px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(30px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;gap:11px;margin:0 0 22px}header .mark{font-size:27px}h1{font-size:25px;margin:0;font-weight:750;letter-spacing:-.6px}.subtitle{color:var(--muted);font-size:13px;margin-top:3px}
+button,input,textarea{font:inherit}button{cursor:pointer;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);padding:11px 13px;min-height:43px}button:active{transform:scale(.99)}button:disabled{opacity:.5;cursor:default}
+.audience{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}.audience button{background:var(--unselected);border-color:#eee;font-weight:650}.audience button.active{background:var(--selected);border-color:#999}
+.types{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}.types button{background:#fafafa;border-color:#ededed;padding:9px}.types button.active{background:#fff;border-color:#777;font-weight:650;box-shadow:inset 0 0 0 1px #777}
+.searchrow{display:flex;gap:8px;margin-bottom:10px}.searchrow input{flex:1;min-width:0}.searchrow button{white-space:nowrap}
+input,textarea{width:100%;border:1px solid #ddd;border-radius:11px;padding:12px;background:white;color:var(--ink);outline:none}input:focus,textarea:focus{border-color:#888}textarea{resize:vertical;min-height:75px}
+.toolbar{display:flex;gap:8px;align-items:center;margin:0 0 13px}.toolbar .count{color:var(--muted);font-size:13px;flex:1}.primary{background:#252525;color:#fff;border-color:#252525;font-weight:650}.small{padding:8px 10px;min-height:36px;font-size:14px}
+.items{display:flex;flex-direction:column;gap:0}.item{display:grid;grid-template-columns:78px minmax(0,1fr) auto;gap:13px;padding:14px 0;border-bottom:1px solid var(--line);align-items:start}.poster{width:78px;aspect-ratio:2/3;border-radius:8px;background:#f0f0f0;object-fit:cover;display:flex;align-items:center;justify-content:center;color:#888;font-size:12px;text-align:center;overflow:hidden}.poster img{width:100%;height:100%;object-fit:cover}.item h3{font-size:16px;line-height:1.3;margin:2px 0 5px}.meta{font-size:12px;color:var(--muted);margin-bottom:8px}.note{font-size:14px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}.source{display:inline-block;margin-top:9px;font-size:13px;color:#555;text-decoration:underline;text-underline-offset:3px}.delete{border:0;background:transparent;color:#888;padding:5px;min-height:auto;font-size:20px}.empty{padding:34px 12px;text-align:center;color:var(--muted);line-height:1.5}.empty strong{display:block;color:#444;margin-bottom:5px}
+.results{display:flex;flex-direction:column;gap:8px;margin:10px 0 18px}.result{display:grid;grid-template-columns:54px 1fr auto;align-items:center;gap:11px;padding:8px;border:1px solid var(--line);border-radius:12px}.result .poster{width:54px;border-radius:6px}.result h3{font-size:14px;margin:0 0 4px}.result .meta{margin:0}.result button{font-size:13px;padding:8px 10px;min-height:35px}
+.card{border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0}.card h2{font-size:17px;margin:0 0 8px}.card p{font-size:13px;line-height:1.45;color:var(--muted);margin:0 0 10px}.fieldlabel{display:block;font-size:13px;font-weight:650;margin:12px 0 6px}.status{font-size:13px;color:var(--muted);min-height:19px;margin:6px 0}.hidden{display:none!important}.footer{font-size:11px;color:#777;line-height:1.5;margin-top:25px}.footer a{color:inherit}.modalback{position:fixed;inset:0;background:#0005;display:flex;align-items:flex-end;justify-content:center;padding:12px;z-index:5}.modal{background:white;width:min(100%,560px);border-radius:18px;padding:18px;max-height:90dvh;overflow:auto;box-shadow:0 8px 40px #0002}.modalhead{display:flex;align-items:center;justify-content:space-between;gap:12px}.modalhead h2{margin:0;font-size:20px}.modalhead button{border:0;background:#f4f4f4;border-radius:50%;width:38px;height:38px;padding:0;font-size:21px}
+@media(min-width:560px){main{padding-top:30px}.item{grid-template-columns:92px minmax(0,1fr) auto}.poster{width:92px}.result .poster{width:54px}}
+</style>
+</head>
+<body>
+<main>
+<header><div class="mark" aria-hidden="true">▣</div><div><h1>My Watchlist</h1><div class="subtitle">A simple place to save what you want to watch.</div></div></header>
+
+<div class="audience" role="group" aria-label="Who is watching">
+<button class="active" data-audience="For Me" aria-pressed="true">For Me</button>
+<button data-audience="For Us" aria-pressed="false">For Us</button>
+</div>
+<div class="types" role="group" aria-label="Type">
+<button class="active" data-type="movie" aria-pressed="true">▣ &nbsp; Movies</button>
+<button data-type="tv" aria-pressed="false">▤ &nbsp; TV</button>
+</div>
+
+<div class="toolbar"><div class="count" id="count">0 titles</div><button class="primary" id="openSearch">＋ Add a title</button></div>
+<div id="items" class="items"></div>
+
+<section class="card">
+<h2>Search and poster settings</h2>
+<p>Connect a free TMDb developer key to search titles and load posters. Your watchlist and key stay in this browser on this device.</p>
+<label class="fieldlabel" for="apiKey">TMDb API key</label>
+<input id="apiKey" type="password" autocomplete="off" placeholder="Paste your TMDb API key">
+<div class="toolbar" style="margin:10px 0 0"><button class="primary small" id="saveKey">Save key on this device</button><button class="small" id="clearKey">Clear key</button></div>
+<div class="status" id="keyStatus" aria-live="polite"></div>
+</section>
+<div class="footer">Movie and TV metadata and poster images provided by TMDb. This product uses the TMDB API but is not endorsed or certified by TMDB. See <a href="https://www.themoviedb.org" target="_blank" rel="noopener">TMDb</a>. Your saved list is stored locally in this browser; clearing browser website data may erase it. This personal prototype does not sync to other devices.</div>
+</main>
+
+<div class="modalback hidden" id="searchModal" role="dialog" aria-modal="true" aria-labelledby="searchTitle">
+<section class="modal">
+<div class="modalhead"><h2 id="searchTitle">Find a title</h2><button id="closeSearch" aria-label="Close">×</button></div>
+<p style="font-size:13px;color:#737373;line-height:1.4">Search by title, choose the right poster, then add an optional note.</p>
+<div class="searchrow"><input id="query" placeholder="Search movies…" autocomplete="off"><button class="primary" id="doSearch">Search</button></div>
+<div id="searchStatus" class="status" aria-live="polite"></div>
+<div id="results" class="results"></div>
+<div id="editFields" class="hidden">
+<div id="chosenTitle" style="font-weight:700;margin:8px 0"></div>
+<label class="fieldlabel" for="note">Short note (optional)</label>
+<textarea id="note" placeholder="e.g. Recommended by John"></textarea>
+<div class="toolbar" style="margin-top:12px"><button class="primary" id="saveTitle">Add to watchlist</button><button id="backToResults">Choose another</button></div>
+</div>
+</section>
+</div>
+
+<script>
+(() => {
+  const STORE = "myWatchlist.v1";
+  const KEY = "myWatchlist.tmdbKey";
+  let audience = "For Me", type = "movie", chosen = null, lastResults = [];
+  let entries = [];
+  try { entries = JSON.parse(localStorage.getItem(STORE) || "[]"); if (!Array.isArray(entries)) entries=[]; } catch { entries=[]; }
+  const $ = id => document.getElementById(id);
+  const saveEntries = () => { try { localStorage.setItem(STORE, JSON.stringify(entries)); } catch(e) { alert("Could not save locally. Check available browser storage."); } };
+  const escapeHtml = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const posterUrl = path => path ? "https://image.tmdb.org/t/p/w342" + path : "";
+  const currentEntries = () => entries.filter(x => x.audience===audience && x.type===type).sort((a,b)=>a.title.localeCompare(b.title));
+  function render() {
+    $("count").textContent = `${currentEntries().length} ${currentEntries().length===1?"title":"titles"}`;
+    const list = $("items"); list.innerHTML = "";
+    const visible = currentEntries();
+    if (!visible.length) {
+      list.innerHTML = `<div class="empty"><strong>Nothing on this list yet.</strong>Search for a movie or TV series and add it here.</div>`;
+      return;
+    }
+    visible.forEach(item => {
+      const article = document.createElement("article"); article.className="item";
+      const poster = item.poster ? `<img src="${escapeHtml(item.poster)}" alt="" loading="lazy">` : `<span>${item.type==="movie"?"Movie":"TV"}</span>`;
+      const year = item.year ? ` · ${escapeHtml(item.year)}` : "";
+      const note = item.note ? `<div class="note">${escapeHtml(item.note)}</div>` : "";
+      const source = item.source ? `<a class="source" href="${escapeHtml(item.source)}" target="_blank" rel="noopener">View source ↗</a>` : "";
+      article.innerHTML = `<div class="poster">${poster}</div><div><h3>${escapeHtml(item.title)}</h3><div class="meta">${item.type==="movie"?"Movie":"TV series"}${year}</div>${note}${source}</div><button class="delete" aria-label="Remove ${escapeHtml(item.title)}" title="Remove title">×</button>`;
+      article.querySelector(".delete").addEventListener("click", () => {
+        if (confirm(`Remove “${item.title}” from your watchlist?`)) { entries=entries.filter(x=>x.id!==item.id); saveEntries(); render(); }
+      });
+      list.appendChild(article);
+    });
+  }
+  function setAudience(value) {
+    audience=value;
+    document.querySelectorAll("[data-audience]").forEach(b=>{const on=b.dataset.audience===value;b.classList.toggle("active",on);b.setAttribute("aria-pressed",String(on));});
+    render();
+  }
+  function setType(value) {
+    type=value;
+    document.querySelectorAll("[data-type]").forEach(b=>{const on=b.dataset.type===value;b.classList.toggle("active",on);b.setAttribute("aria-pressed",String(on));});
+    $("query").placeholder=value==="movie"?"Search movies…":"Search TV series…";
+    render();
+  }
+  document.querySelectorAll("[data-audience]").forEach(b=>b.addEventListener("click",()=>setAudience(b.dataset.audience)));
+  document.querySelectorAll("[data-type]").forEach(b=>b.addEventListener("click",()=>setType(b.dataset.type)));
+  $("apiKey").value=localStorage.getItem(KEY)||"";
+  $("keyStatus").textContent=localStorage.getItem(KEY)?"A key is saved on this device.":"Add a TMDb key to enable title search.";
+  $("saveKey").addEventListener("click",()=>{
+    const v=$("apiKey").value.trim();
+    if(!v){$("keyStatus").textContent="Paste your API key first.";return;}
+    localStorage.setItem(KEY,v);$("keyStatus").textContent="Key saved in this browser on this device.";
+  });
+  $("clearKey").addEventListener("click",()=>{localStorage.removeItem(KEY);$("apiKey").value="";$("keyStatus").textContent="Saved key cleared.";});
+  function openModal() {
+    $("searchModal").classList.remove("hidden"); $("query").value=""; $("note").value="";
+    $("results").innerHTML=""; $("searchStatus").textContent=""; $("editFields").classList.add("hidden");
+    chosen=null; lastResults=[]; $("query").focus();
+  }
+  function closeModal() {$("searchModal").classList.add("hidden");}
+  $("openSearch").addEventListener("click",openModal);
+  $("closeSearch").addEventListener("click",closeModal);
+  $("searchModal").addEventListener("click",e=>{if(e.target===$("searchModal"))closeModal();});
+  $("query").addEventListener("keydown",e=>{if(e.key==="Enter")search();});
+  $("doSearch").addEventListener("click",search);
+  async function search() {
+    const key=localStorage.getItem(KEY), q=$("query").value.trim();
+    $("results").innerHTML=""; $("editFields").classList.add("hidden");
+    if(!key){$("searchStatus").textContent="Add your TMDb API key in Search and poster settings first.";return;}
+    if(!q){$("searchStatus").textContent="Enter a title to search.";return;}
+    $("searchStatus").textContent="Searching…"; $("doSearch").disabled=true;
+    try {
+      const url=`https://api.themoviedb.org/3/search/${type}?api_key=${encodeURIComponent(key)}&query=${encodeURIComponent(q)}&include_adult=false&language=en-US&page=1`;
+      const response=await fetch(url);
+      if(!response.ok) throw new Error(response.status===401?"TMDb rejected the key. Check that it is correct.":`Search failed (${response.status}).`);
+      const data=await response.json(); lastResults=data.results||[];
+      $("searchStatus").textContent=lastResults.length?`Choose the correct ${type==="movie"?"movie":"TV series"}:`:"No matches found. Try another title.";
+      const box=$("results");
+      lastResults.slice(0,12).forEach((r,i)=>{
+        const title=type==="movie"?(r.title||r.original_title):(r.name||r.original_name);
+        const date=type==="movie"?r.release_date:r.first_air_date;
+        const year=date?date.slice(0,4):"";
+        const result=document.createElement("div");result.className="result";
+        const poster=r.poster_path?`<img src="${posterUrl(r.poster_path)}" alt="" loading="lazy">`:`<span>No poster</span>`;
+        result.innerHTML=`<div class="poster">${poster}</div><div><h3>${escapeHtml(title)}</h3><div class="meta">${escapeHtml(year||"Year unavailable")}</div></div><button>Select</button>`;
+        result.querySelector("button").addEventListener("click",()=>selectResult(r,title,year));
+        box.appendChild(result);
+      });
+    } catch(e) { $("searchStatus").textContent=e.message||"Something went wrong. Check your connection and key."; }
+    finally {$("doSearch").disabled=false;}
+  }
+  function selectResult(r,title,year) {
+    chosen={id:r.id,title,year,poster:posterUrl(r.poster_path),source:`https://www.themoviedb.org/${type}/${r.id}`};
+    $("chosenTitle").textContent=title+(year?` (${year})`:"");
+    $("results").classList.add("hidden"); $("editFields").classList.remove("hidden"); $("note").focus();
+  }
+  $("backToResults").addEventListener("click",()=>{$("results").classList.remove("hidden");$("editFields").classList.add("hidden");});
+  $("saveTitle").addEventListener("click",()=>{
+    if(!chosen)return;
+    const duplicate=entries.some(x=>x.audience===audience&&x.type===type&&x.tmdbId===chosen.id);
+    if(duplicate){alert("That title is already on this list.");return;}
+    entries.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),tmdbId:chosen.id,title:chosen.title,year:chosen.year,poster:chosen.poster,source:chosen.source,note:$("note").value.trim(),audience,type});
+    saveEntries();closeModal();render();
+  });
+  render();
+})();
+</script>
+</body>
+</html>
